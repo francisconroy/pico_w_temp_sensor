@@ -59,6 +59,7 @@ def connect_wifi():
     print("Connected to WiFi")
     print(wlan.ifconfig())
 
+
 def run_webserver():
     html = """<!DOCTYPE html>
     <html>
