@@ -99,7 +99,6 @@ def run_webserver():
             print('connection closed')
 
 
-
 led = OnboardLED()
 led.blink_start(2)
 connect_wifi()
