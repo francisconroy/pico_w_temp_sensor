@@ -47,7 +47,7 @@ class OnboardLED:
 def connect_wifi():
     # Fill in your WiFi network name (ssid) and password here:
     wifi_ssid = "fiyevgee"
-    wifi_password = "supersecretpublicknowledge"
+    wifi_password = sys.getenv("WIFI_PASSWORD")
 
     # Connect to WiFi
     wlan = network.WLAN(network.STA_IF)
