@@ -8,6 +8,8 @@ import time
 import machine
 import network
 
+from config import wifi_pass
+
 
 class OnboardLED:
     def __init__(self):
@@ -47,7 +49,7 @@ class OnboardLED:
 def connect_wifi():
     # Fill in your WiFi network name (ssid) and password here:
     wifi_ssid = "fiyevgee"
-    wifi_password = sys.getenv("WIFI_PASSWORD")
+    wifi_password = wifi_pass
 
     # Connect to WiFi
     wlan = network.WLAN(network.STA_IF)
