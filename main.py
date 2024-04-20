@@ -8,6 +8,7 @@ import time
 import machine
 import network
 
+import ahtx0
 from config import wifi_pass
 
 
@@ -62,12 +63,14 @@ def connect_wifi():
     print(wlan.ifconfig())
 
 
-def run_webserver():
+def run_webserver(sensor_instance=None):
     html = """<!DOCTYPE html>
     <html>
         <head> <title>Pico W</title> </head>
         <body> <h1>Pico W</h1>
-            <p>%s</p>
+            <table>
+            <tr><td>Temperature:</td><td>{temp}</td></tr>
+            <tr><td>Humidity:</td><td>{humidity}</td></tr>
         </body>
     </html>
     """
@@ -90,7 +93,9 @@ def run_webserver():
 
             request = str(request)
 
-            response = html
+            # Get latest temperature and humidity from AHT-20 sensor
+
+            response = html.format(temp=sensor_instance.temperature, humidity=sensor_instance.relative_humidity)
 
             cl.send('HTTP/1.0 200 OK\r\nContent-type: text/html\r\n\r\n')
             cl.send(response)
@@ -116,7 +121,10 @@ i2c = machine.I2C(0, freq=50000)  # create I2C peripheral at frequency of 400kHz
 
 for item in i2c.scan():  # scan for peripherals, returning a list of 7-bit addresses
     print(item)
-run_webserver()
+
+# Create the sensor object using I2C
+sensor = ahtx0.AHT10(i2c)
+run_webserver(sensor)
 
 # i2c.writeto(42, b'123')         # write 3 bytes to peripheral with 7-bit address 42
 # i2c.readfrom(42, 4)             # read 4 bytes from peripheral with 7-bit address 42
