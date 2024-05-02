@@ -66,9 +66,16 @@ def connect_wifi():
 def run_webserver(sensor_instance=None):
     html = """<!DOCTYPE html>
     <html>
-        <head> <title>Pico W</title> </head>
+        <head> <title>Pico W</title> 
+        <style>
+        .divtext {{
+            font-family: impact;
+            font-size: 10vw;
+        }}
+    </style>
+        </head>
         <body> <h1>Pico W</h1>
-            <table>
+            <table class="divtext">
             <tr><td>Temperature:</td><td>{temp}</td></tr>
             <tr><td>Humidity:</td><td>{humidity}</td></tr>
         </body>
@@ -95,7 +102,8 @@ def run_webserver(sensor_instance=None):
 
             # Get latest temperature and humidity from AHT-20 sensor
 
-            response = html.format(temp=sensor_instance.temperature, humidity=sensor_instance.relative_humidity)
+            response = html.format(temp=sensor_instance.temperature,
+                                   humidity=sensor_instance.relative_humidity)
 
             cl.send('HTTP/1.0 200 OK\r\nContent-type: text/html\r\n\r\n')
             cl.send(response)
@@ -107,10 +115,12 @@ def run_webserver(sensor_instance=None):
 
 
 led = OnboardLED()
-led.blink_start(2)
+# led.on()
+time.sleep(1)
+# led.blink_start(2)
+led.blink_count(10)
 connect_wifi()
-led.blink_stop()
-led.on()
+
 mid = machine.unique_id()
 for i in mid:
     print(hex(i))
@@ -124,6 +134,9 @@ for item in i2c.scan():  # scan for peripherals, returning a list of 7-bit addre
 
 # Create the sensor object using I2C
 sensor = ahtx0.AHT10(i2c)
+
+# led.blink_stop()
+led.off()
 run_webserver(sensor)
 
 # i2c.writeto(42, b'123')         # write 3 bytes to peripheral with 7-bit address 42
