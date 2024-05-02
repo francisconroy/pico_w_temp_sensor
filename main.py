@@ -35,9 +35,9 @@ class OnboardLED:
                 self.blink_stop()
                 self.blink_counter = None
 
-    def blink_count(self, count):
+    def blink_count(self, count, freq=2):
         self.blink_counter = count
-        self.blink_start()
+        self.blink_start(freq)
 
     def blink_start(self, freq):
         self.blink_timer.init(freq=freq, mode=machine.Timer.PERIODIC,
