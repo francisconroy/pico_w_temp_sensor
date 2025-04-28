@@ -10,6 +10,7 @@ import network
 
 import ahtx0
 from config import wifi_pass
+from prometheus_express import CollectorRegistry, Gauge, Router
 
 
 class OnboardLED:
@@ -61,6 +62,23 @@ def connect_wifi():
         time.sleep(1)
     print("Connected to WiFi")
     print(wlan.ifconfig())
+
+
+def main():
+    registry = CollectorRegistry(namespace='prom_express')
+    metric_humidity = Gauge('humidity', 'humidity from the sensor AHT10',
+                            registry=registry)
+    metric_temperature = Gauge('temperature',
+                               'temperature from the sensor AHT10',
+                               registry=registry)
+    router = Router()
+    router.register('GET', '/metrics', registry.handler)
+    server = False
+
+    while True:
+        while not server:
+            server = start_http_server(8080, address=
+            network.WLAN(STA_IF).ifconfig()[0])
 
 
 def run_webserver(sensor_instance=None):
